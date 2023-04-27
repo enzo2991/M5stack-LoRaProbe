@@ -5,11 +5,12 @@
 #include <CayenneLPP.h>
 #include <gps.h>
 #define BUFFER_LENGTH_MAX    256
-#define LENGTH_BYTE 60
+#define LENGTH_BYTE 70
 bool sending = false;
 char* DevEui="a8610a32374f7508";
-char* AppEui="8899AABBCCDDEEFF";   
-char* AppKey="7FF7005D07BFCD15AC5793AFA7BB5CAF";
+char* AppKey="82b951411d3432a63e0d446da497e12e";
+short rssi;
+float snr;
 char _buffer[256];
 CayenneLPP lpp(LENGTH_BYTE);
 
@@ -38,29 +39,6 @@ bool ReceiveAT(uint32_t timeout)
   return false;
 }
 
-/*-------------------------------------------------------------------------------*/
-/* Function void ATCommand(char cmd[],char date[], uint32_t timeout = 50)        */
-/*                                                                               */
-/* TASK    : send AT commands to the M5Stack COM.LoRaWAN Module                  */
-/* UPDATE  : 24.01.2021                                                          */
-/*-------------------------------------------------------------------------------*/
-void ATCommand(char cmd[],char date[], uint32_t timeout = 50)
-{
-  char buf[256] = {0};
-  if(date == NULL)
-  {
-    sprintf(buf,"AT+%s",cmd);
-  }
-  else
-  {
-    sprintf(buf,"AT+%s=%s",cmd,date);
-  }
-  Serial1.write(buf);
-  delay(200);
-  ReceiveAT(timeout);
-}
-
-
 //read buffer
 short readBuffer(char *buffer, int length, uint32_t timeout)
 {
@@ -87,6 +65,29 @@ short readBuffer(char *buffer, int length, uint32_t timeout)
   return i;
 }
 
+/*-------------------------------------------------------------------------------*/
+/* Function void ATCommand(char cmd[],char date[], uint32_t timeout = 50)        */
+/*                                                                               */
+/* TASK    : send AT commands to the M5Stack COM.LoRaWAN Module                  */
+/* UPDATE  : 24.01.2021                                                          */
+/*-------------------------------------------------------------------------------*/
+void ATCommand(char cmd[],char date[], uint32_t timeout = 50)
+{
+  char buf[256] = {0};
+  if(date == NULL)
+  {
+    sprintf(buf,"AT+%s",cmd);
+  }
+  else
+  {
+    sprintf(buf,"AT+%s=%s",cmd,date);
+  }
+  Serial1.write(buf);
+  delay(200);
+  ReceiveAT(timeout);
+}
+
+
 //Transfer Packet
 bool transferPacket(unsigned char *buffer, int length, uint32_t timeout)
 {
@@ -106,7 +107,7 @@ bool transferPacket(unsigned char *buffer, int length, uint32_t timeout)
   //2. send
   char buf[256] = {0};
   while (Serial1.available())Serial1.read();
-  ATCommand("SendHex", str);
+  ATCommand("SendHex", str); 
 
   Serial1.write(buf);
   memset(_buffer, 0, BUFFER_LENGTH_MAX);
@@ -125,9 +126,6 @@ void initLora(){
   // your TTN access data
   ATCommand("DevEui", DevEui);
   delay(500);
-  // always the same for all devices
-  ATCommand("AppEui", AppEui);
-  delay(500);
   ATCommand("AppKey", AppKey);
   delay(500);
 
@@ -143,6 +141,7 @@ void sendPayLoad(float lat,float lng,float alt,int hdop,int sat){
   bool result = false;
 
   // activate communication
+  Serial.println(F("[!] LoraSet=?")); 
   ATCommand("LoraSet", "?");
   delay(500);
 
@@ -154,8 +153,10 @@ void sendPayLoad(float lat,float lng,float alt,int hdop,int sat){
   lpp.addSat(2,sat);
   lpp.addHdop(3,hdop);// hdop
   lpp.addGPS(4,lat,lng,alt); // position gps
+  lpp.addRssi(5,-255);
+  lpp.addSnr(6,-255);
   rgb_neopixel(0,0,255);
-  result = transferPacket((unsigned char *)lpp.getBuffer(),lpp.getSize(),5000);
+  result = transferPacket((unsigned char *)lpp.getBuffer(),lpp.getSize(),300);
   if(result == true){
     rgb_neopixel(0,255,0);
   }else {

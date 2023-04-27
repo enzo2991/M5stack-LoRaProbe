@@ -1,0 +1,14 @@
+{
+    "name": "CayenneLPP",
+    "version": "1.3.0",
+    "keywords": "Cayenne,LoraWan",
+    "description": "...",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/ElectronicCats/CayenneLPP.git"
+    },
+    "frameworks": "arduino",
+    "platforms": "*"
+  }
+  

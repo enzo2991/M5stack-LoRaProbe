@@ -133,7 +133,7 @@ void printTime(int x,int y ,int w, int h , TinyGPSTime &t) {
 /* TASK    : show tft display sensor battery                                     */
 /* UPDATE  : 22.09.2020                                                          */
 /*-------------------------------------------------------------------------------*/
-void tft_display_sensor_Lora(int rssi , float snr){
+void tft_display_sensor_Lora(short rssi , float snr){
   M5.Lcd.fillRect(155,50,160,90,TFT_WHITE);
   M5.Lcd.setTextColor(TFT_BLACK);
   M5.Lcd.setFreeFont(FMB9);

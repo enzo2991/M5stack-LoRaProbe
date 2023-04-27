@@ -1,6 +1,8 @@
 {
     "cmake.configureOnOpen": true,
     "files.associations": {
-        "functional": "cpp"
-    }
+        "functional": "cpp",
+        "string_view": "cpp"
+    },
+    "cmake.sourceDirectory": "C:/Users/EXA343/Desktop/example/propre M5Stack/.pio/libdeps/m5stack-fire/ArduinoJson/src"
 }
