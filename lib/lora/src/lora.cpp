@@ -5,12 +5,14 @@
 #include <CayenneLPP.h>
 #include <gps.h>
 #define BUFFER_LENGTH_MAX    256
-#define LENGTH_BYTE 70
+#define LENGTH_BYTE 82
 bool sending = false;
 char* DevEui="a8610a32374f7508";
 char* AppKey="82b951411d3432a63e0d446da497e12e";
 short rssi;
-float snr;
+short snr;
+int boucle = 0;
+char buffer[256];
 char _buffer[256];
 CayenneLPP lpp(LENGTH_BYTE);
 
@@ -87,6 +89,28 @@ void ATCommand(char cmd[],char date[], uint32_t timeout = 50)
   ReceiveAT(timeout);
 }
 
+//parse ACK downlink packet
+short receivePacket(char *buffer, int length, short *rssi, short *snr, short *datarate)
+{
+  char *ptr;
+  short number = 0;
+
+  ptr = strstr(_buffer, "datarate = ");
+  if (ptr)*datarate = atoi(ptr + 11);
+  else *datarate = 0;
+
+  ptr = strstr(_buffer, "rssi = ");
+  if (ptr)*rssi = atoi(ptr + 7);
+  else *rssi = -255;
+
+  ptr = strstr(_buffer, "snr = ");
+  if (ptr)*snr = atoi(ptr + 6);
+  else *snr = -20;
+
+  memset(_buffer, 0, BUFFER_LENGTH_MAX);
+
+  return number;
+}
 
 //Transfer Packet
 bool transferPacket(unsigned char *buffer, int length, uint32_t timeout)
@@ -153,11 +177,17 @@ void sendPayLoad(float lat,float lng,float alt,int hdop,int sat){
   lpp.addSat(2,sat);
   lpp.addHdop(3,hdop);// hdop
   lpp.addGPS(4,lat,lng,alt); // position gps
-  lpp.addRssi(5,-255);
-  lpp.addSnr(6,-255);
+  if (boucle > 0){
+    lpp.addRssi(5,rssi);
+    lpp.addSnr(6,snr);
+  } 
   rgb_neopixel(0,0,255);
   result = transferPacket((unsigned char *)lpp.getBuffer(),lpp.getSize(),300);
   if(result == true){
+    boucle++;
+    short datarate;
+    memset(buffer, 0, 256);
+    receivePacket(buffer, 256, &rssi, &snr, &datarate);
     rgb_neopixel(0,255,0);
   }else {
     rgb_neopixel(255,0,0);
