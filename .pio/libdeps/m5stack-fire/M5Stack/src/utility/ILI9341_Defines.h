@@ -26,6 +26,7 @@
 #define ILI9341_PINK        0xF81F
 
 #define BLACK       0x0000 /*   0,   0,   0 */
+#define INFRABEL    0x02FF /*   0,   30,   255 */
 #define NAVY        0x000F /*   0,   0, 128 */
 #define DARKGREEN   0x03E0 /*   0, 128,   0 */
 #define DARKCYAN    0x03EF /*   0, 128, 128 */

@@ -17,7 +17,7 @@ double lat, lng, alt, last_lat,last_lng;
 int sat, hdop,datevalue;
 unsigned long distanceToLast;
 
-unsigned long distanceMin = 20;
+unsigned long distanceMin = 10;
 TinyGPSDate date;
 TinyGPSTime inTime;
 
@@ -42,11 +42,17 @@ void printScreen(){
     printDate(0,180,120,15 ,date);
     printTime(55,200,95,15 ,inTime);
     printFloat(45,120,90,15,alt, 7, 2);
+    bat = M5.Power.getBatteryLevel();
+    tft_display_update_battery(bat);
 }
 
 void gpsgetdata(){
     (gps.satellites.isValid()) ? sat = gps.satellites.value(): sat;
-    (gps.hdop.isValid()) ? hdop = gps.hdop.value(): hdop;
+    if(gps.hdop.isValid() && gps.hdop.value() < 2000){
+        hdop = gps.hdop.value();
+    } else {
+        hdop = 0;
+    }
     (gps.altitude.isValid()) ? alt = gps.altitude.value(): alt;
     if(gps.location.isValid()){
         lat = gps.location.lat();

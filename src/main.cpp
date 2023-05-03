@@ -23,7 +23,7 @@ void fadeScreen(){
       // Turning off the LCD backlight
       if (tft_backlight == false)
       {
-        rgb_neopixel_off();
+        // rgb_neopixel_off();
         M5.Lcd.sleep();  M5.Lcd.setBrightness(0);
       }
       tft_counter=0;
@@ -56,13 +56,10 @@ void loop() {
     showScreen();
     delay(200);
   }
-  if(M5.BtnB.wasPressed()){
-    gpsgetdata();
-    delay(200);
-  }
   if(M5.BtnC.wasPressed() && sending == false){
+    showScreen();
     sendPayLoad(lat,lng,alt,hdop,sat);
-    tft_display_sensor_Lora(rssi);
+    tft_display_sensor_Lora(rssi,boucle);
     delay(200);
   }
   gpsgetdata();

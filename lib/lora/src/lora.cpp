@@ -8,7 +8,7 @@
 #define LENGTH_BYTE 82
 bool sending = false;
 char* DevEui="a8610a32374f7508";
-char* AppKey="82b951411d3432a63e0d446da497e12e";
+char* AppKey="42F09D6560257A212504674A92657667";
 short rssi;
 short snr;
 int boucle = 0;

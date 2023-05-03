@@ -133,7 +133,7 @@ void printTime(int x,int y ,int w, int h , TinyGPSTime &t) {
 /* TASK    : show tft display sensor battery                                     */
 /* UPDATE  : 22.09.2020                                                          */
 /*-------------------------------------------------------------------------------*/
-void tft_display_sensor_Lora(short rssi){
+void tft_display_sensor_Lora(short rssi,int boucle){
   M5.Lcd.fillRect(155,50,160,90,TFT_WHITE);
   M5.Lcd.setTextColor(TFT_BLACK);
   M5.Lcd.setFreeFont(FMB9);
@@ -141,6 +141,9 @@ void tft_display_sensor_Lora(short rssi){
   M5.Lcd.setTextColor(TFT_BLACK);
   M5.Lcd.setFreeFont(FMB9);
   M5.Lcd.drawString("RSSI: " + String(rssi),180,90);
+  M5.Lcd.setTextColor(TFT_BLACK);
+  M5.Lcd.setFreeFont(FMB9);
+  M5.Lcd.drawString("Success N: " + String(boucle),160,110);
 }
 /*-------------------------------------------------------------------------------*/
 /* Function void tft_display_update_battery(int battery)                         */
@@ -167,7 +170,7 @@ void tft_display_m5stack(void)
 {
     bat = M5.Power.getBatteryLevel();
     // display room screen
-    tft_display_room_screen(room_screen,CYAN);
+    tft_display_room_screen(room_screen,INFRABEL);
     // display battery sensor
     tft_display_sensor_battery(bat);
     //display info gps
