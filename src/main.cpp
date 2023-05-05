@@ -59,7 +59,7 @@ void loop() {
   if(M5.BtnC.wasPressed() && sending == false){
     showScreen();
     sendPayLoad(lat,lng,alt,hdop,sat);
-    tft_display_sensor_Lora(rssi,boucle);
+    tft_display_sensor_Lora(rssi,snr,boucle);
     delay(200);
   }
   gpsgetdata();

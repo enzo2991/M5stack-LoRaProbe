@@ -10,7 +10,7 @@ bool sending = false;
 char* DevEui="a8610a32374f7508";
 char* AppKey="42F09D6560257A212504674A92657667";
 short rssi;
-short snr;
+float snr;
 int boucle = 0;
 char buffer[256];
 char _buffer[256];
@@ -185,6 +185,7 @@ void sendPayLoad(float lat,float lng,float alt,int hdop,int sat){
   result = transferPacket((unsigned char *)lpp.getBuffer(),lpp.getSize(),300);
   if(result == true){
     boucle++;
+    short snr;
     short datarate;
     memset(buffer, 0, 256);
     receivePacket(buffer, 256, &rssi, &snr, &datarate);

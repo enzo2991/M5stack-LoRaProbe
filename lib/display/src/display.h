@@ -9,7 +9,7 @@ void printInt(int x,int y ,int w, int h,unsigned long val, int len);
 void printFloat(int x, int y ,int w, int h ,float val, int len, int prec);
 void printDate(int x,int y ,int w, int h ,TinyGPSDate &d);
 void printTime(int x,int y ,int w, int h ,TinyGPSTime &t);
-void tft_display_sensor_Lora(short rssi,int boucle);
+void tft_display_sensor_Lora(short rssi,float snr,int boucle);
 void tft_display_update_battery(int battery);
 void fadeScreen();
 void showScreen();
